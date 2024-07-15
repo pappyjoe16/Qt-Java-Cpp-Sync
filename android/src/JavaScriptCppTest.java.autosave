@@ -1,0 +1,65 @@
+package org.qtproject.example;
+
+import java.util.Map;
+import java.util.List;
+import android.app.Activity;
+import com.onecoder.fitblekit.API.Boxing.FBKApiBoxing;
+import com.onecoder.fitblekit.API.Boxing.FBKApiBoxingCallBack;
+import com.onecoder.fitblekit.API.ScanDevices.FBKApiScan;
+import com.onecoder.fitblekit.API.ScanDevices.FBKApiScanCallBack;
+import com.onecoder.fitblekit.Ble.FBKBleDevice.FBKBleDevice;
+
+public class JavaScriptCppTest {
+
+    private FBKApiScan bleScanner;
+
+    public JavaScriptCppTest() {
+       bleScanner = new FBKApiScan();
+    }
+
+    public static String getJavaMessage() {
+        System.out.println("Output from java: Hello, Yemi Omo Boda Fagbohun!!! ");
+        return "Hello, Yemi Omo Boda Fagbohun!!!";
+    }
+/*
+    private static native void onRealTimeBoxingData(Map<String, String> data);
+
+    private FBKApiBoxingCallBack m_apiBoxingCallBack = new FBKApiBoxingCallBack() {
+        @Override
+        public void realTimeBoxing(Object data, FBKApiBoxing apiBoxing) {
+            final Map<String, String> resultMap = (Map<String, String>) data;
+            onRealTimeBoxingData(resultMap);
+        }
+    };
+
+    public FBKApiBoxingCallBack getApiBoxingCallBack() {
+        return m_apiBoxing CallBack;
+    }*/
+
+    public void startScan(Activity activity) {
+       bleScanner.setScanRssi(-100);
+       bleScanner.setRealTimeMode(false);
+
+       bleScanner.startScan(activity, new FBKApiScanCallBack() {
+           @Override
+           public void bleScanResult(List<FBKBleDevice> deviceArray, FBKApiScan apiScan) {
+               for (FBKBleDevice device : deviceArray) {
+                   System.out.println("Device found: " + device.getDeviceName() + " - " + device.getMacAddress());
+               }
+           }
+
+           @Override
+           public void bleScanAvailable(Boolean isAvailable, FBKApiScan apiScan) {
+               if (isAvailable) {
+                   System.out.println("BLE scan is available.");
+               } else {
+                   System.out.println("BLE scan is not available.");
+               }
+           }
+       });
+    }
+
+    public void stopScan() {
+       bleScanner.stopScan();
+    }
+}
